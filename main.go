@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -17,10 +18,17 @@ func main() {
 	}
 	baseURL := args[0]
 	fmt.Printf("starting crawl of: %s", baseURL)
-	pages := make(map[string]int)
-	crawlPage(baseURL, baseURL, pages)
+	cfg, err := NewConfig(baseURL, 5)
+	if err != nil {
+		log.Fatal("Error creating config struct")
+	}
+
+	cfg.wg.Add(1)
+	go cfg.crawlPage(baseURL)
+	cfg.wg.Wait()
+
 	fmt.Println("\n--- Crawl Results ---")
-	for url, count := range pages {
+	for url, count := range cfg.pages {
 		fmt.Printf("- %s: %d\n", url, count)
 	}
 }
