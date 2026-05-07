@@ -4,22 +4,31 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 )
 
 func main() {
 	args := os.Args[1:]
-	if len(args) < 1 {
-		fmt.Println("no website provided")
+	if len(args) < 3 {
+		fmt.Println("./crawler URL maxConcurrency maxPages")
 		os.Exit(1)
 	}
-	if len(args) > 1 {
+	if len(args) > 3 {
 		fmt.Println("too many arguments provided")
 		os.Exit(1)
 	}
 	baseURL := args[0]
+	maxConcurrency, err := strconv.Atoi(args[1])
+	if err != nil {
+		log.Fatal("Error converting maxConcurrency to int")
+	}
+	maxPages, err := strconv.Atoi(args[2])
+	if err != nil {
+		log.Fatal("Error converting maxPages to int")
+	}
 	fmt.Printf("starting crawl of: %s", baseURL)
-	cfg, err := NewConfig(baseURL, 5)
+	cfg, err := NewConfig(baseURL, maxConcurrency, maxPages)
 	if err != nil {
 		log.Fatal("Error creating config struct")
 	}
