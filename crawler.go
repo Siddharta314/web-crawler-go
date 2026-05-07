@@ -53,7 +53,12 @@ func (cfg *config) addPageVisit(normalizedURL string) (isFirst bool) {
 
 func (cfg *config) crawlPage(rawCurrentURL string) {
 	defer cfg.wg.Done()
-
+	cfg.mu.Lock()
+	if len(cfg.pages) >= cfg.maxPages {
+		cfg.mu.Unlock()
+		return
+	}
+	cfg.mu.Unlock()
 	currentURL, err := url.Parse(rawCurrentURL)
 	if err != nil {
 		return
