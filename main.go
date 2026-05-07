@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
@@ -24,11 +25,13 @@ func main() {
 	}
 
 	cfg.wg.Add(1)
+	startTime := time.Now()
 	go cfg.crawlPage(baseURL)
 	cfg.wg.Wait()
+	fmt.Printf("Tiempo total: %s\n", time.Since(startTime))
 
-	fmt.Println("\n--- Crawl Results ---")
-	for url, count := range cfg.pages {
-		fmt.Printf("- %s: %d\n", url, count)
-	}
+	// fmt.Println("\n--- Crawl Results ---")
+	// for url, count := range cfg.pages {
+	// 	fmt.Printf("- %s: %d\n", url, count)
+	// }
 }
