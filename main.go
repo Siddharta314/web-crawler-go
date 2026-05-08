@@ -39,9 +39,10 @@ func main() {
 	cfg.wg.Wait()
 	fmt.Printf("Tiempo total: %s\n", time.Since(startTime))
 
-	fmt.Printf("Pages crawled: %d\n", len(cfg.pages))
-	fmt.Println("\n--- Crawl Results ---")
-	for url, count := range cfg.pages {
-		fmt.Printf("- %s: %d\n", url, count)
-	}
+	// fmt.Printf("Pages crawled: %d\n", len(cfg.pages))
+	// fmt.Println("\n--- Crawl Results ---")
+	// for url, count := range cfg.pages {
+	// 	fmt.Printf("- %s: %d\n", url, count)
+	// }
+	writeJSONReport(cfg.pages, "report.json")
 }
