@@ -6,7 +6,7 @@ import (
 )
 
 type config struct {
-	pages              map[string]int
+	pages              map[string]PageData
 	baseURL            *url.URL
 	mu                 *sync.Mutex
 	concurrencyControl chan struct{}
@@ -21,7 +21,7 @@ func NewConfig(rawBaseURL string, maxConcurrency, maxPages int) (*config, error)
 	}
 
 	return &config{
-		pages:              make(map[string]int),
+		pages:              make(map[string]PageData),
 		baseURL:            base,
 		mu:                 &sync.Mutex{},
 		concurrencyControl: make(chan struct{}, maxConcurrency),

@@ -42,12 +42,12 @@ func (cfg *config) addPageVisit(normalizedURL string) (isFirst bool) {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 
-	if count, ok := cfg.pages[normalizedURL]; ok {
-		cfg.pages[normalizedURL] = count + 1
+	if _, ok := cfg.pages[normalizedURL]; ok {
+		// cfg.pages[normalizedURL] = count + 1
 		return false
 	}
 
-	cfg.pages[normalizedURL] = 1
+	cfg.pages[normalizedURL] = PageData{URL: normalizedURL}
 	return true
 }
 
@@ -90,6 +90,9 @@ func (cfg *config) crawlPage(rawCurrentURL string) {
 		fmt.Printf("Error parsing URLs from %s: %v\n", rawCurrentURL, err)
 		return
 	}
+	cfg.mu.Lock()
+	cfg.pages[normalizedURL] = extractPageData(html, normalizedURL)
+	cfg.mu.Unlock()
 
 	for _, nextURL := range urls {
 		cfg.wg.Add(1)
